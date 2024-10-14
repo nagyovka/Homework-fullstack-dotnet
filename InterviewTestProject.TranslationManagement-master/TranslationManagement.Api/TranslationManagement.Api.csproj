@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\External.ThirdParty.Services\External.ThirdParty.Services.csproj" />
+    <ProjectReference Include="..\TranslationManagement.Database\TranslationManagement.Database.csproj" />
   </ItemGroup>
 
 </Project>

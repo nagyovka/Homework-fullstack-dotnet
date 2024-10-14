@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using TranslationManagement.Database;
+using TranslationManagement.Database.Repositories.Interfaces;
+using TranslationManagement.Database.Repositories.Implementation;
 
 namespace TranslationManagement.Api
 {
@@ -24,8 +27,11 @@ namespace TranslationManagement.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TranslationManagement.Api", Version = "v1" });
             });
 
+            // Register database layer
             services.AddDbContext<AppDbContext>(options => 
                 options.UseSqlite("Data Source=TranslationAppDatabase.db"));
+            services.AddScoped<ITranslationJobRepository, TranslationJobRepository>();
+            services.AddScoped<ITranslatorRepository, TranslatorRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
