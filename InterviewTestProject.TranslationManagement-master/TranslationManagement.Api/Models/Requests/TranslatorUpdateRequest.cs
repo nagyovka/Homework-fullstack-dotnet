@@ -1,6 +1,6 @@
 ﻿namespace TranslationManagement.Api.Models.Requests;
 
-public record TranslationJobUpdateRequest
+public record TranslatorUpdateRequest
 {
     public int Id { get; set; }
     public string Status { get; set; }

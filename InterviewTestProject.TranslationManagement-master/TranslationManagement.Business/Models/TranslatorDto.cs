@@ -1,5 +1,5 @@
-﻿namespace TranslationManagement.Database.Entities;
-public class TranslatorEntity
+﻿namespace TranslationManagement.Business.Models;
+public class TranslatorDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }
