@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Mappers;
 using TranslationManagement.Api.Models.Requests;
@@ -21,11 +19,12 @@ namespace TranslationManagement.Api.Controlers
         private readonly TranslatorApiMapper _mapper;
         private readonly TranslatorUpdateRequestValidator _updateRequestValidator;
 
-        public TranslatorManagementController(ILogger<TranslatorManagementController> logger, ITranslatorService service, TranslatorApiMapper mapper)
+        public TranslatorManagementController(ILogger<TranslatorManagementController> logger, ITranslatorService service, TranslatorApiMapper mapper, TranslatorUpdateRequestValidator updateRequestValidator)
         {
             _logger = logger;
             _service = service;
             _mapper = mapper;
+            _updateRequestValidator = updateRequestValidator;
         }
 
         [HttpGet]

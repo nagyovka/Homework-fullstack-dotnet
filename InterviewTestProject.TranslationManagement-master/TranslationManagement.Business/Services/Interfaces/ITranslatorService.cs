@@ -5,5 +5,5 @@ public interface ITranslatorService
 {
     IEnumerable<TranslatorDto> GetTranslators();
     int CreateTranslator(TranslatorDto dto);
-    int UpdateTranslator(TranslatorDto dto);
+    void UpdateTranslator(TranslatorDto dto);
 }

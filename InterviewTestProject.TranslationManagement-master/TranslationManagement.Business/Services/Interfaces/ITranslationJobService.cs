@@ -5,5 +5,5 @@ public interface ITranslationJobService
 {
     IEnumerable<TranslationJobDto> GetTranslationJobs();
     int CreateTranslationJob(TranslationJobDto dto);
-    int UpdateTranslationJob(TranslationJobDto dto);
+    void UpdateTranslationJob(TranslationJobDto dto);
 }

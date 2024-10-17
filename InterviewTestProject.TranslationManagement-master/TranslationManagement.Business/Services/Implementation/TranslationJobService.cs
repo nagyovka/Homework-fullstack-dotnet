@@ -1,12 +1,5 @@
 ﻿using External.ThirdParty.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using TranslationManagement.Business.Enums;
 using TranslationManagement.Business.Mappers;
 using TranslationManagement.Business.Models;
@@ -30,33 +23,12 @@ public class TranslationJobService : ITranslationJobService
     public int CreateTranslationJob(TranslationJobDto dto)
     {
         dto.Status = JobStatus.New.ToString();
-
-        var reader = new StreamReader(dto.File.OpenReadStream());
-        string content;
-
-        if (dto.File.FileName.EndsWith(".txt"))
-        {
-            content = reader.ReadToEnd();
-        }
-        else if (dto.File.FileName.EndsWith(".xml"))
-        {
-            var xdoc = XDocument.Parse(reader.ReadToEnd());
-            content = xdoc.Root.Element("Content").Value;
-        }
-        else
-        {
-            throw new NotSupportedException("unsupported file");
-        }
-
-        dto.OriginalContent = content;// call parser
+        dto.OriginalContent = ContentParser.ParseFile(dto.File);// call parser
         dto.TranslatedContent = "";
         dto.Price = dto.OriginalContent.Length * Constants.TranslationJobConstants.PricePerCharacter;
         var id = _repository.Add(_mapper.DtoToEntity(dto));
-        var notificationSvc = new UnreliableNotificationService();
-        while (!notificationSvc.SendNotification("Job created: " + id).Result)
-        {
-        }
 
+        SendNotificationAsync(id).ConfigureAwait(false);
         _logger.LogInformation("New job notification sent");
         return id;
     }
@@ -66,8 +38,17 @@ public class TranslationJobService : ITranslationJobService
         return _repository.GetAll().Select(_mapper.EntityToDto);
     }
 
-    public int UpdateTranslationJob(TranslationJobDto dto)
+    public void UpdateTranslationJob(TranslationJobDto dto)
     {
-        throw new NotImplementedException();
+        _repository.Update(_mapper.DtoToEntity(dto));
+    }
+
+    private async Task SendNotificationAsync(int jobId)
+    {
+        var notificationSvc = new UnreliableNotificationService();
+        while (!await notificationSvc.SendNotification("Job created: " + jobId))
+        {
+            await Task.Delay(100);
+        }
     }
 }

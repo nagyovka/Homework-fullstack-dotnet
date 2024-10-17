@@ -18,11 +18,12 @@ namespace TranslationManagement.Api.Controllers
         private readonly TranslationJobApiMapper _mapper;
         private readonly TranslationJobUpdateRequestValidator _updateRequestValidator;
 
-        public TranslationJobController(ILogger<TranslationJobController> logger, ITranslationJobService service, TranslationJobApiMapper mapper)
+        public TranslationJobController(ILogger<TranslationJobController> logger, ITranslationJobService service, TranslationJobApiMapper mapper, TranslationJobUpdateRequestValidator updateRequestValidator)
         {
             _logger = logger;
             _service = service;
             _mapper = mapper;
+            _updateRequestValidator = updateRequestValidator;
         }
 
         [HttpGet]
