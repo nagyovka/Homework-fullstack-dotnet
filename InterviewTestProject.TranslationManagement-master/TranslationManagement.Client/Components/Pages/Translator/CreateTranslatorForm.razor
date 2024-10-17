@@ -1,0 +1,47 @@
+﻿@page "/translator/create"
+@using TranslationManagement.Api.Models.Requests
+@using static System.Net.WebRequestMethods
+@rendermode InteractiveServer
+@inject IHttpClientFactory HttpClientFactory
+@code {
+    [Parameter] public EventCallback<TranslatorCreateRequest> OnCreate { get; set; }
+
+    private TranslatorCreateRequest newTranslator = new TranslatorCreateRequest();
+
+    private async Task CreateTranslator()
+    {
+        var client = HttpClientFactory.CreateClient("ApiClient");
+        var response = await client.PostAsJsonAsync("api/TranslatorsManagement/AddTranslator", newTranslator);
+
+        if (response.IsSuccessStatusCode)
+        {
+            
+        }
+        else
+        {
+        }
+
+        newTranslator = new TranslatorCreateRequest(); // Reset form
+    }
+}
+
+<EditForm Model="newTranslator" OnValidSubmit="CreateTranslator" FormName="createTranslatorForm">
+    <div>
+        <label for="name">Name</label>
+        <InputText id="name" @bind-Value="newTranslator.Name" />
+    </div>
+    <div>
+        <label for="hourlyRate">Hourly Rate</label>
+        <InputText id="hourlyRate" @bind-Value="newTranslator.HourlyRate" />
+    </div>
+    <div>
+        <label for="status">Status</label>
+        <InputText id="status" @bind-Value="newTranslator.Status" />
+    </div>
+    <div>
+        <label for="creditCardNumber">Credit card number</label>
+        <InputText id="creditCardNumber" @bind-Value="newTranslator.CreditCardNumber" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+</EditForm>

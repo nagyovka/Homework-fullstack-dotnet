@@ -27,6 +27,15 @@ namespace TranslationManagement.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
             services.AddControllers();
             services.AddValidatorsFromAssemblyContaining<TranslationJobUpdateRequestValidator>();
             services.AddSwaggerGen(c =>
@@ -60,6 +69,7 @@ namespace TranslationManagement.Api
             {
                 endpoints.MapControllers();
             });
+            app.UseCors("AllowAllOrigins");
         }
     }
 }
