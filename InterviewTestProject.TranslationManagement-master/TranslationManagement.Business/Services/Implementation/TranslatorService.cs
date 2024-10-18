@@ -20,6 +20,11 @@ public class TranslatorService : ITranslatorService
         return _repository.Add(_mapper.DtoToEntity(dto));
     }
 
+    public TranslatorDto GetTranslatorById(int id)
+    {
+        return _mapper.EntityToDto(_repository.GetById(id));
+    }
+
     public IEnumerable<TranslatorDto> GetTranslators()
     {
         return _repository.GetAll().Select(_mapper.EntityToDto);

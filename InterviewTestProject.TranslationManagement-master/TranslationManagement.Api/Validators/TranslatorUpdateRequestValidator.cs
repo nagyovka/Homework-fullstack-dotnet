@@ -12,6 +12,10 @@ public class TranslatorUpdateRequestValidator : AbstractValidator<TranslatorUpda
 
     private readonly ITranslatorRepository _repository;
 
+    public TranslatorUpdateRequestValidator()
+    {
+    }
+
     public TranslatorUpdateRequestValidator(ITranslatorRepository repository)
     {
         _repository = repository;

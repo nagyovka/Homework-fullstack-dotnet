@@ -33,6 +33,17 @@ namespace TranslationManagement.Api.Controlers
             return Ok(_service.GetTranslators().Select(_mapper.DtoToResponse));
         }
 
+        [HttpGet("GetTranslator/{id}")]
+        public ActionResult<TranslatorResponse> GetTranslatorById(int id)
+        {
+            var translator = _service.GetTranslatorById(id);
+            if (translator == null)
+            {
+                return NotFound();
+            }
+            return Ok(translator);
+        }
+
         [HttpGet]
         public ActionResult<TranslatorResponse[]> GetTranslatorsByName(string name)
         {
@@ -43,8 +54,18 @@ namespace TranslationManagement.Api.Controlers
         [HttpPost]
         public IActionResult AddTranslator([FromBody] TranslatorCreateRequest request)
         {
-            _service.CreateTranslator(_mapper.RequestToDto(request));
-            return Ok();
+            var newId = _service.CreateTranslator(_mapper.RequestToDto(request));
+            return CreatedAtAction(
+                nameof(GetTranslatorById),
+                new { id = newId },
+                new TranslatorResponse
+                {
+                    Id = newId,
+                    CreditCardNumber = request.CreditCardNumber,
+                    Name = request.Name,
+                    HourlyRate = request.HourlyRate,
+                    Status = request.Status,
+                });
         }
         
         [HttpPost]
