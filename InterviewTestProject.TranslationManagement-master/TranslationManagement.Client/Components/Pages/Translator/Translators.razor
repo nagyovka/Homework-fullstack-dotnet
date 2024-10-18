@@ -1,0 +1,65 @@
+﻿@page "/translators"
+@inject IHttpClientFactory HttpClientFactory
+
+<h3>Translators</h3>
+
+@if (translators == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (translators.Length == 0)
+{
+    <p>No translators found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Hourly Rate</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var translator in translators)
+            {
+                <tr>
+                    <td>@translator.Id</td>
+                    <td>@translator.Name</td>
+                    <td>@translator.HourlyRate</td>
+                    <td>@translator.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private TranslatorResponse[] translators;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = HttpClientFactory.CreateClient("ApiClient");
+            var response = await client.GetFromJsonAsync<TranslatorResponse[]>("api/TranslatorsManagement/GetTranslators");
+            translators = response ?? Array.Empty<TranslatorResponse>();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error fetching translators: {ex.Message}");
+            translators = Array.Empty<TranslatorResponse>();
+        }
+    }
+
+    public class TranslatorResponse
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string HourlyRate { get; set; }
+        public string Status { get; set; }
+        public string CreditCardNumber { get; set; }
+    }
+}
